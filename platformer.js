@@ -64,6 +64,13 @@ Q.loadTMX("level1.tmx,wall2.png,main.json,main.png", function() {
         jump: { frames: [8], loop:false, rate: 1},
     });
   Q.stageScene("level1");
+},{ progressCallback: function(loaded,total){
+ var element = document.getElementById("loading");
+    element.style.width = Math.floor(loaded/total*100) + "%";
+   if (loaded == total) {
+      document.getElementById("loading").remove();
+    }
+}
 });
 
 
