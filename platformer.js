@@ -61,26 +61,32 @@ Q.Sprite.extend("Enemy", {
     //this.on("hit.sprite",this,"hit");
     this.on("bump.left,bump.right,bump.bottom",function(collision) {
       if(collision.obj.isA("Player")) { 
-        Q.stageScene("level1");
+       // Q.stageScene("level1");
+                 Q.stageScene("endGame",2, { label: "You Died" });   
                 collision.obj.destroy();
       }
     });
       this.on("bump.top",function(collision) {
       if(collision.obj.isA("Player")) { 
         this.destroy(); 
-        collision.obj.p.vy = -300;
-             
+        collision.obj.p.vy = -300; 
  // alert("x="+collision.obj.p.x+"  y="+collision.obj.p.y);
       }
     });
   },
-  step: function(dt){
-    this.play('walk');
-  }
+  step: function(dt) {
+        if(this.p.vx > 0) {
+          this.p.flip="x";
+          this.play("walk");
+        } else if(this.p.vx < 0) {
+          this.p.flip="";
+          this.play("walk");
+        }
+    },
 });
 Q.Enemy.extend("Snail", {
   init: function(p) {
-    this._super(p,{
+    this._super(p,{ gravity:0
      //sheet:"snail",
     //  w: 55,
       //h: 34
@@ -117,15 +123,43 @@ Q.Sprite.extend("Pole",{
        collisionMask: Q.SPRITE_PLAYER,
     });
      this.add('2d,animation');
-    this.on("bump.left,bump.right,bump.top",function(collision){ console.log("gffgfg");
+    this.on("bump.left,bump.right,bump.top",function(collision){ 
   if(collision.obj.isA("Player"))
-  {console.log("right");
+  {
     this.play("open");
+    Q.output(this.p);
  }
 });
        
 }
 });
+
+  Q.output=function(p)
+  {
+     $('#exampleModal').modal('show') ;
+$('#exampleModal').on('shown.bs.modal', function (e) {
+  Q.pauseGame();
+})
+$('#exampleModal').on('hidden.bs.modal', function (e) {
+  Q.unpauseGame();
+})
+  }
+/*Q.Sprite.extend("Coin",{
+  init:function(p){
+    this._super(p,{
+      sheet:p.sprite,
+      collisionMask: Q.SPRITE_PLAYER,
+    });
+     this.add('2d,animation');
+    this.on("bump.left,bump.right,bump.top",function(collision){ 
+  if(collision.obj.isA("Player"))
+  {
+     this.destroy(); 
+ }
+});
+       
+}
+});*/
 Q.scene("level1",function(stage) {
 
 //stage.insert(new Q.Repeater({ asset: "back.png",repeatY:true, speedX: 10, speedY: 0.5 })); 
@@ -135,7 +169,23 @@ Q.scene("level1",function(stage) {
    stage.insert(new Q.Tower({ x:1330, y: 600 }));
 });
 
-
+Q.scene('endGame',function(stage) {
+      var container = stage.insert(new Q.UI.Container({
+        x: Q.width/2, y: Q.height/2, fill: "rgba(0,0,0,0.5)"
+      }));
+ 
+      var button = container.insert(new Q.UI.Button({ x: 0, y: 0, fill: "#CCCCCC",
+                                                      label: "Play Again" }))        
+      var label = container.insert(new Q.UI.Text({x:0, y: -10 - button.p.h,
+                                                       label: stage.options.label }));
+       
+      button.on("click",function() {
+        Q.clearStages();
+        Q.stageScene('level1');
+      });
+ 
+        container.fit(20);
+});
 
 
 // Load one or more TMX files
