@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="45" height="10" tilewidth="70" tileheight="70" nextobjectid="65">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="45" height="10" tilewidth="70" tileheight="70" nextobjectid="70">
  <tileset firstgid="1" name="tiles" tilewidth="70" tileheight="70" spacing="2">
   <image source="../images/tiles.png" width="914" height="936"/>
   <tile id="1">
@@ -74,6 +74,7 @@
   <tile id="1">
    <properties>
     <property name="Class" value="Pole"/>
+    <property name="sensor" value="true"/>
     <property name="sprite" value="pole"/>
    </properties>
   </tile>
@@ -559,7 +560,16 @@
   <object id="34" gid="178" x="611" y="497" width="72" height="72"/>
  </objectgroup>
  <objectgroup name="Object Layer 2">
-  <object id="58" gid="186" x="300" y="474" width="43" height="45"/>
+  <object id="58" gid="186" x="300" y="474" width="43" height="45">
+   <properties>
+    <property name="flag_no" value="1"/>
+   </properties>
+  </object>
+  <object id="68" gid="187" x="1296" y="200" width="43" height="45">
+   <properties>
+    <property name="flag_no" value="2"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Object Layer 3"/>
 </map>

@@ -4,7 +4,7 @@ window.addEventListener("load",function() {
 var Q = window.Q = Quintus()
         .include("Sprites, Scenes, Input, 2D, Anim, Touch, UI, TMX")
         // Maximize this game to whatever the size of the browser is
-        .setup({ maximize: true })
+        .setup("mygame",{ maximize: true })
         // And turn on default input controls and touch input (for UI)
         .controls(true).touch()
 
@@ -86,7 +86,7 @@ Q.Sprite.extend("Enemy", {
 });
 Q.Enemy.extend("Snail", {
   init: function(p) {
-    this._super(p,{ gravity:0
+    this._super(p,{
      //sheet:"snail",
     //  w: 55,
       //h: 34
@@ -114,6 +114,7 @@ Q.Enemy.extend("Slime", {
   }
 
 });
+var cnt=0,temp;
 Q.Sprite.extend("Pole",{
   init:function(p){
     this._super(p,{
@@ -127,22 +128,56 @@ Q.Sprite.extend("Pole",{
   if(collision.obj.isA("Player"))
   {
     this.play("open");
-    Q.output(this.p);
- }
+     if(cnt==0 || temp!=p.flag_no )
+        { cnt++;
+          temp=p.flag_no;
+           Q.output(this.p);
+        }    
+   
+  }
 });
        
 }
 });
 
   Q.output=function(p)
-  {
-     $('#exampleModal').modal('show') ;
-$('#exampleModal').on('shown.bs.modal', function (e) {
-  Q.pauseGame();
-})
-$('#exampleModal').on('hidden.bs.modal', function (e) {
-  Q.unpauseGame();
-})
+  { 
+    var rad={"q1":{"qt":"who is awesome?","o1":"aishwarya","o2":"naman","o3":"alien","o4":"ttt"},
+          "q2":{"qt":"computers can out perform humans?","o1":"yes!","o2":"no!","o3":"maybe?","o4":"i dont know!"}};
+ console.log("q"+cnt);
+ document.getElementById("e").title=rad["q"+cnt]["qt"];
+for( var i=1;i<5;i++)
+ document.getElementById(i).innerHTML=rad["q"+cnt]["o"+i];
+
+
+ var xi= window.innerWidth/2-30, yi= window.innerHeight/2;
+$('#e').popover({ html : true, 
+        content: function() {
+          return $('#but').html();
+        }
+      });
+ $('#e').css({'position':'absolute','top':yi,'right':xi}).popover('show');
+  if(cnt==0 || temp!=p.flag_no )
+ { cnt++;temp=p.flag_no;}
+ console.log("cnt="+cnt);
+ $('#e').on('shown.bs.popover', function (e) { $('#b').show();
+      Q.pauseGame();
+ });
+ $('.btn').click(function(){
+                $('#b').hide();
+                      $('#e').popover('hide');
+                       Q.unpauseGame();
+                       $('#mygame').focus();
+                       if($('input[name=optradio]:checked').val()==1)
+                alert("correct answer");
+              else
+                { cnt=0;alert("sdwsdwd");
+                  $('input[type=radio]:checked').attr("checked",false);
+                   Q.stageScene("endGame",2, { label: "WRONG ANSWWER ! SORRY ! YOU LOSE!" });   
+
+                }
+
+                     });
   }
 /*Q.Sprite.extend("Coin",{
   init:function(p){
@@ -160,6 +195,18 @@ $('#exampleModal').on('hidden.bs.modal', function (e) {
        
 }
 });*/
+
+Q.scene('note',function(stage){
+  $('#exampleModal').modal('show') ;
+$('#exampleModal').on('shown.bs.modal', function (e) {
+  Q.pauseGame();
+})
+$('#exampleModal').on('hidden.bs.modal', function (e) {
+  Q.unpauseGame();
+   $('#mygame').focus();
+    Q.stageScene("level1");
+ })
+});
 Q.scene("level1",function(stage) {
 
 //stage.insert(new Q.Repeater({ asset: "back.png",repeatY:true, speedX: 10, speedY: 0.5 })); 
@@ -168,6 +215,7 @@ Q.scene("level1",function(stage) {
    stage.add("viewport").follow(player);
    stage.insert(new Q.Tower({ x:1330, y: 600 }));
 });
+
 
 Q.scene('endGame',function(stage) {
       var container = stage.insert(new Q.UI.Container({
@@ -181,7 +229,7 @@ Q.scene('endGame',function(stage) {
        
       button.on("click",function() {
         Q.clearStages();
-        Q.stageScene('level1');
+        Q.stageScene('note');
       });
  
         container.fit(20);
@@ -208,14 +256,14 @@ Q.loadTMX("level1.tmx,main.json,main.png,enemies.png,enemies.json,bird.json,bird
     Q.animations("slime", EnemyAnimations);
     Q.animations("snail", EnemyAnimations);
     Q.animations('pole',{
-    closed:{frames:[1],rate:1/10,flip: false},
-    open:{frames:[3,4,5,6,7,8,9,10,11],rate: 1/5, flip: false, loop: true }
+        closed:{frames:[1],rate:1/10,flip: false},
+         open:{frames:[3,4,5,6,7,8,9,10,11],rate: 1/5, flip: false, loop: true }
   });
   /* Q.animations("bird",{
     fly:{frames:[0,1,2,3,4,5,6,7],rate:1/5,loop:true}
    });
   */
-  Q.stageScene("level1");
+  Q.stageScene("note");
 },{ progressCallback: function(loaded,total){
  var element = document.getElementById("loading");
     element.style.width = Math.floor(loaded/total*100) + "%";

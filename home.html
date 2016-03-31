@@ -23,6 +23,15 @@
 <script src='platformer.js'></script>
 <style> 
   body { padding:0px; margin:0px; } 
+   #b{
+  position: absolute;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 10;
+ }
+ #mygame{
+ z-index: 1;
+ position: fixed;
+ }
 </style>
 </head>
 <body>
@@ -34,15 +43,32 @@
   </div>
 </div>
     </div>
+     <div id='b'  style="width:2000; height:1000;"></div>
+<canvas id='mygame' width="600" height="600"></canvas>
 
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalLabel">TITLE </h4>
+        <h4 class="modal-title" id="exampleModalLabel">PROGRAMMING IN C++ </h4>
       </div>
-      <div class="modal-body">
-        DNKNCNSKJNKC FENFEKFNEKN EFNKENFKENF ENKEFEK DKNSKDK DKSDKWS KSNDKWKNKN
+      <div class="modal-body"> 
+The following is an example of a very basic program in c++. <br>
+ <code> 
+ #include&ltiostream.h&gt<br>
+ Void main()<br>
+  {<br>
+  Cout<<”HELLO   WORLD !!!”;<br>
+  }<br></code>  
+<strong>Output:-</strong><br>
+HELLO  WORLD !!!<br>
+The first line of code  includes a header file. Header files are included at the beginning to provide all the necessary functions required in any program. Here iostream is a header file which provides us with input & output streams. Header files contains predeclared function libraries, which can be used by users for their ease.
+The second line is the main function of the program . the compilation of the program begins from this line/function. It holds the executing part of program. The keyword ‘ void ‘ is used so that the function doesn’t return any value .
+the brackets define a block of code . Anything written within the curly brackets is a part of the main function. 
+The fourth line is used to output anything on the output screen.Message has to be within double-quotes.
+The syntax is :<br><code>
+Cout&lt”{message to be printed on output screen }”&gt;</code>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -50,5 +76,33 @@
     </div>
   </div>
 </div>
+
+ <a id="e" tabindex="0" data-toggle="popover" data-trigger="focus" data-html="true" title=" QUESTION" ></a>
+<div  id="but" style="display: none">
+  <form role="form">
+    <div class="radio">
+      <label><input type="radio" name="optradio" value='1' ><div id="1">Option 1</div></label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" name="optradio" value='0'><div id="2">Option 2</div></label>
+    </div>
+    <div class="radio ">
+      <label><input type="radio" name="optradio" value='0' ><div id="3">Option 3</div></label>
+    </div>
+<div class="radio ">
+      <label><input type="radio" name="optradio" val='0' ><div id="4">Option 4</div></label>
+    </div>
+  </form>
+  <button type="button" class="btn btn-primary">Submit</button>
+</div>
+
+<script type="text/javascript">
+ $(document).ready(function(){ 
+  $('#b').hide();
+})
+
+ 
+
+  </script>
 </body>
 </html>
