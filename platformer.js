@@ -142,7 +142,7 @@ Q.Sprite.extend("Pole",{
 
   Q.output=function(p)
   { 
-    var rad={"q1":{"qt":"who is the greatest of all?","1":"aishwarya","2":"naman","3":"alien","4":"ttt","correct":"1"},
+    var rad={"q1":{"qt":"who created c++ ?","1":"Bjarne Stroustrup","2":"Neil Armstrong","3":"Dennis Ritchie","4":"Aishwarya","correct":"1"},
           "q2":{"qt":"can computers out perform humans?","1":"yes!","2":"no!","3":"maybe?","4":"i dont know!","correct":"2"}};
 
  document.getElementById("t").innerHTML=rad["q"+cnt]["qt"];
@@ -167,12 +167,12 @@ closeb=0;
  $('#check').click(function(){
                 
                        if($('input[name=optradio]:checked').val()==rad["q"+cnt]["correct"])
-               {$("#msg").html('<span class="glyphicon glyphicon-ok"> CORRECT ANSWER');
+               {$("#msg").html('<i class="fa fa-check" style="font-size:30px;color:green"></i> CORRECT ANSWER');
                 closeb=1;
                 } 
               else
                 { cnt--;
-               $("#msg").html('<span class="glyphicon glyphicon-remove"> WRONG ANSWER');
+               $("#msg").html('<i class="fa fa-close" style="font-size:30px;color:red"></i> WRONG ANSWER');
                closeb=2;
                  // $('input[type=radio]:checked').attr("checked",false);
                 // Q.stageScene("endGame",2, { label: "WRONG ANSWWER ! SORRY ! YOU LOSE!" });   
