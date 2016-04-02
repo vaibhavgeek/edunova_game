@@ -142,12 +142,12 @@ Q.Sprite.extend("Pole",{
 
   Q.output=function(p)
   { 
-    var rad={"q1":{"qt":"who is awesome?","o1":"aishwarya","o2":"naman","o3":"alien","o4":"ttt"},
-          "q2":{"qt":"computers can out perform humans?","o1":"yes!","o2":"no!","o3":"maybe?","o4":"i dont know!"}};
- console.log("q"+cnt);
- document.getElementById("e").title=rad["q"+cnt]["qt"];
+    var rad={"q1":{"qt":"who is the greatest of all?","1":"aishwarya","2":"naman","3":"alien","4":"ttt","correct":"1"},
+          "q2":{"qt":"can computers out perform humans?","1":"yes!","2":"no!","3":"maybe?","4":"i dont know!","correct":"2"}};
+
+ document.getElementById("t").innerHTML=rad["q"+cnt]["qt"];
 for( var i=1;i<5;i++)
- document.getElementById(i).innerHTML=rad["q"+cnt]["o"+i];
+ document.getElementById(i).innerHTML=rad["q"+cnt][""+i];
 
 
  var xi= window.innerWidth/2-30, yi= window.innerHeight/2;
@@ -163,21 +163,37 @@ $('#e').popover({ html : true,
  $('#e').on('shown.bs.popover', function (e) { $('#b').show();
       Q.pauseGame();
  });
- $('.btn').click(function(){
-                $('#b').hide();
-                      $('#e').popover('hide');
-                       Q.unpauseGame();
-                       $('#mygame').focus();
-                       if($('input[name=optradio]:checked').val()==1)
-                alert("correct answer");
+closeb=0;
+ $('#check').click(function(){
+                
+                       if($('input[name=optradio]:checked').val()==rad["q"+cnt]["correct"])
+               {$("#msg").html('<span class="glyphicon glyphicon-ok"> CORRECT ANSWER');
+                closeb=1;
+                } 
               else
-                { cnt=0;alert("sdwsdwd");
-                  $('input[type=radio]:checked').attr("checked",false);
-                   Q.stageScene("endGame",2, { label: "WRONG ANSWWER ! SORRY ! YOU LOSE!" });   
+                { cnt--;
+               $("#msg").html('<span class="glyphicon glyphicon-remove"> WRONG ANSWER');
+               closeb=2;
+                 // $('input[type=radio]:checked').attr("checked",false);
+                // Q.stageScene("endGame",2, { label: "WRONG ANSWWER ! SORRY ! YOU LOSE!" });   
 
                 }
-
+                $('#check').remove();
                      });
+ $('#close').click(function(){
+            if(closeb==1)
+                     {$('#b').hide();
+                      $('#e').popover('hide');
+                       Q.unpauseGame();
+                       $('#mygame').focus();} 
+                       else if(closeb==2)
+                       {
+                        $('#e').popover('hide');
+                        Q.stageScene("note");
+                       }
+                        
+                     });
+
   }
 /*Q.Sprite.extend("Coin",{
   init:function(p){

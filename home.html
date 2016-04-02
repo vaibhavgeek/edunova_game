@@ -5,10 +5,10 @@
 
 <meta name="viewport" content="width=device-width, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
 <title>Platformer TMX Example</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.0.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src='/lib/quintus.js'></script>
 <script src='/lib/quintus_sprites.js'></script>
 <script src='/lib/quintus_scenes.js'></script>
@@ -32,9 +32,19 @@
  z-index: 1;
  position: fixed;
  }
+ 
 </style>
 </head>
 <body>
+  this space is freethis space is freethis space is freethis space is free
+  this space is free
+  this space is free
+  this space is free
+  this space is free<br>
+  this space is free<br>
+  this space is free<br>
+  this space is free
+<button type="button" class="btn btn-info">im a useless button</button>
 	<div id='loading'>
      <div class="progress">
   <div class="progress-bar progress-bar-striped active" role="progressbar"
@@ -77,23 +87,27 @@ Cout&lt”{message to be printed on output screen }”&gt;</code>
   </div>
 </div>
 
- <a id="e" tabindex="0" data-toggle="popover" data-trigger="focus" data-html="true" title=" QUESTION" ></a>
+ <a id="e" tabindex="0" data-toggle="popover" data-trigger="focus" data-html="true"   ></a>
 <div  id="but" style="display: none">
   <form role="form">
-    <div class="radio">
+      <div class="well" id="t" style="background-color:lavender;"></div>
+      <div class="radio ">
       <label><input type="radio" name="optradio" value='1' ><div id="1">Option 1</div></label>
     </div>
     <div class="radio">
-      <label><input type="radio" name="optradio" value='0'><div id="2">Option 2</div></label>
+      <label><input type="radio" name="optradio" value='2'><div id="2">Option 2</div></label>
     </div>
-    <div class="radio ">
-      <label><input type="radio" name="optradio" value='0' ><div id="3">Option 3</div></label>
+    <div class="radio">
+      <label><input type="radio" name="optradio" value='3' ><div id="3">Option 3</div></label>
     </div>
 <div class="radio ">
-      <label><input type="radio" name="optradio" val='0' ><div id="4">Option 4</div></label>
+      <label><input type="radio" name="optradio" val='4' ><div id="4">Option 4</div></label>
     </div>
   </form>
-  <button type="button" class="btn btn-primary">Submit</button>
+  <div id="msg"></div>
+  <button  class="btn btn-info" id="check">Submit</button>
+  <button class="btn btn-success " id="close">Continue</button>
+
 </div>
 
 <script type="text/javascript">
