@@ -2,11 +2,9 @@
 window.addEventListener("load",function() {
 
 var Q = window.Q = Quintus()
-        .include("Sprites, Scenes, Input, 2D, Anim, Touch, UI, TMX")
-        // Maximize this game to whatever the size of the browser is
+        .include("Audio,Sprites, Scenes, Input, 2D, Anim, Touch, UI, TMX")
         .setup("mygame",{ maximize: true })
-        // And turn on default input controls and touch input (for UI)
-        .controls(true).touch()
+        .controls(true).touch().enableSound()
 
 Q.Sprite.extend("Player",{
 
@@ -39,11 +37,6 @@ Q.Sprite.extend("Player",{
         },
 
 });
-Q.Sprite.extend("Tower", {
-  init: function(p) {
-    this._super(p, { sheet: 'tower' });
-  }
-});
 
 Q.Sprite.extend("Enemy", {
   init: function(p) {
@@ -68,6 +61,7 @@ Q.Sprite.extend("Enemy", {
     });
       this.on("bump.top",function(collision) {
       if(collision.obj.isA("Player")) { 
+        Q.audio.play("hit.mp3");
         this.destroy(); 
         collision.obj.p.vy = -300; 
  // alert("x="+collision.obj.p.x+"  y="+collision.obj.p.y);
@@ -115,6 +109,7 @@ Q.Enemy.extend("Slime", {
 
 });
 var cnt=0,temp;
+
 Q.Sprite.extend("Pole",{
   init:function(p){
     this._super(p,{
@@ -143,7 +138,9 @@ Q.Sprite.extend("Pole",{
   Q.output=function(p)
   { 
     var rad={"q1":{"qt":"who created c++ ?","1":"Bjarne Stroustrup","2":"Neil Armstrong","3":"Dennis Ritchie","4":"Aishwarya","correct":"1"},
-          "q2":{"qt":"can computers out perform humans?","1":"yes!","2":"no!","3":"maybe?","4":"i dont know!","correct":"2"}};
+          "q2":{"qt":"can computers out perform humans?","1":"yes!","2":"no!","3":"maybe?","4":"i dont know!","correct":"2"},
+          "q3":{"qt":"cout is used for which purpose?","1":"store information","2":"for taking input","3":"displaying ouput","4":"none of these","correct":"3"},
+          "q4":{"qt":"what do header files contain?","1":"previous programs","2":"predeclared function libraries","3":"output of the program","4":"all of these","correct":"2"}};
 
  document.getElementById("t").innerHTML=rad["q"+cnt]["qt"];
 for( var i=1;i<5;i++)
@@ -174,9 +171,6 @@ closeb=0;
                 { cnt--;
                $("#msg").html('<i class="fa fa-close" style="font-size:30px;color:red"></i> WRONG ANSWER');
                closeb=2;
-                 // $('input[type=radio]:checked').attr("checked",false);
-                // Q.stageScene("endGame",2, { label: "WRONG ANSWWER ! SORRY ! YOU LOSE!" });   
-
                 }
                 $('#check').remove();
                      });
@@ -195,22 +189,24 @@ closeb=0;
                      });
 
   }
-/*Q.Sprite.extend("Coin",{
+
+Q.Sprite.extend("Coin",{
   init:function(p){
-    this._super(p,{
-      sheet:p.sprite,
-      collisionMask: Q.SPRITE_PLAYER,
-    });
-     this.add('2d,animation');
-    this.on("bump.left,bump.right,bump.top",function(collision){ 
-  if(collision.obj.isA("Player"))
-  {
-     this.destroy(); 
- }
+              this._super(p,{ 
+                sheet:p.sprite,
+                gravity:0,
+                collisionMask: Q.SPRITE_PLAYER,
+               });
+               this.add('2d,animation');
+              this.on("bump.left,bump.right,bump.top",function(collision){ 
+            if(collision.obj.isA("Player"))
+            {Q.audio.play('coin.mp3');
+               this.destroy(); 
+             }
+          });
+                 
+         }
 });
-       
-}
-});*/
 
 Q.scene('note',function(stage){
   $('#exampleModal').modal('show') ;
@@ -220,16 +216,16 @@ $('#exampleModal').on('shown.bs.modal', function (e) {
 $('#exampleModal').on('hidden.bs.modal', function (e) {
   Q.unpauseGame();
    $('#mygame').focus();
-    Q.stageScene("level1");
+    Q.stageScene("level");
  })
 });
-Q.scene("level1",function(stage) {
+Q.scene("level",function(stage) {
 
 //stage.insert(new Q.Repeater({ asset: "back.png",repeatY:true, speedX: 10, speedY: 0.5 })); 
-  Q.stageTMX("level1.tmx",stage);
-  var player = stage.insert(new Q.Player({x:200,y:300}));
+  Q.stageTMX("level.tmx",stage);
+  var player = stage.insert(new Q.Player({x:200,y:500}));
    stage.add("viewport").follow(player);
-   stage.insert(new Q.Tower({ x:1330, y: 600 }));
+
 });
 
 
@@ -254,10 +250,11 @@ Q.scene('endGame',function(stage) {
 
 // Load one or more TMX files
 // and load all the assets referenced in them
-Q.loadTMX("level1.tmx,main.json,main.png,enemies.png,enemies.json,bird.json,bird.png,pole.json,pole.png", function() {
+Q.loadTMX("level.tmx,main.json,main.png,enemies.png,enemies.json, coin.mp3,hit.mp3,bird.json,bird.png,pole.json,pole.png,collectables.json,collectables.png", function() {
   Q.compileSheets("main.png","main.json");
  Q.compileSheets("enemies.png","enemies.json");
  Q.compileSheets("pole.png","pole.json");
+ Q.compileSheets("collectables.png","collectables.json");
         Q.animations('player', {
         run_left: { frames: [11,12,13,14,15,16,17,18,19], next: 'stand_left', rate: 1/10},
         run_right: { frames: [0,1,2,3,4,5,6,7,8,9], next: 'stand_right', rate: 1/10},
