@@ -15,15 +15,27 @@ Q.Sprite.extend("Player",{
       sprite: "player",
        jumpSpeed: -550,
        speed: 200 ,
+        standingPoints: [ [8,30],[-8,30],[-8,-30],[8,-30]],
+    //  duckingPoints : [ [ -16, 44], [ -23, 35 ], [-23,-48], [23,-10], [23, 35 ], [ 16, 44 ]],
       frame: 1,
        type: Q.SPRITE_PLAYER,
       collisionMask: Q.SPRITE_DEFAULT | Q.SPRITE_ENEMY
 
     });
+  this.p.points = this.p.standingPoints;
 
 
     this.add('2d, platformerControls,animation');
+    this.on("hit.sprite",function(collision) {
 
+                if(collision.obj.isA("Door")) {
+            Q.stageScene("endGame",1, { label: "You Won!" }); 
+            this.destroy();
+            
+          
+      
+          }
+        });
 
   },
    step: function(dt) {
@@ -37,24 +49,27 @@ Q.Sprite.extend("Player",{
         },
 
 });
-
+Q.Sprite.extend("Door",{
+  init: function(p){
+    this._super(p,{
+      sheet:"door",
+      collisionMask: Q.SPRITE_PLAYER
+    });
+  }
+});
 Q.Sprite.extend("Enemy", {
   init: function(p) {
 
     this._super(p,{
       sheet: p.sprite,
       vx: 150,
-     // defaultDirection: 'left',
       type: Q.SPRITE_ENEMY,
       collisionMask: Q.SPRITE_DEFAULT |Q.SPRITE_ENEMY 
     });
 
     this.add("2d, aiBounce, animation");
-   // this.on("bump.top",this,"die");
-    //this.on("hit.sprite",this,"hit");
     this.on("bump.left,bump.right,bump.bottom",function(collision) {
       if(collision.obj.isA("Player")) { 
-       // Q.stageScene("level1");
                  Q.stageScene("endGame",2, { label: "You Died" });   
                 collision.obj.destroy();
       }
@@ -81,7 +96,6 @@ Q.Sprite.extend("Enemy", {
 Q.Enemy.extend("Snail", {
   init: function(p) {
     this._super(p,{
-     //sheet:"snail",
     //  w: 55,
       //h: 34
     });
@@ -91,7 +105,6 @@ Q.Enemy.extend("Snail", {
 Q.Enemy.extend("Fly", {
   init: function(p) {
     this._super(p,{
-    // sheet:"fly",
      w: 55,
       h: 34
     });
@@ -101,7 +114,6 @@ Q.Enemy.extend("Fly", {
 Q.Enemy.extend("Slime", {
   init: function(p) {
     this._super(p,{
-   //  sheet:"slime",
      w: 55,
       h: 36
     });
@@ -236,7 +248,7 @@ Q.scene('endGame',function(stage) {
  
       var button = container.insert(new Q.UI.Button({ x: 0, y: 0, fill: "#CCCCCC",
                                                       label: "Play Again" }))        
-      var label = container.insert(new Q.UI.Text({x:0, y: -10 - button.p.h,
+      var label = container.insert(new Q.UI.Text({x:0, y: -10 - button.p.h, color: "#ffffff",
                                                        label: stage.options.label }));
        
       button.on("click",function() {
@@ -247,10 +259,8 @@ Q.scene('endGame',function(stage) {
         container.fit(20);
 });
 
-
-// Load one or more TMX files
-// and load all the assets referenced in them
 Q.loadTMX("level.tmx,main.json,main.png,enemies.png,enemies.json, coin.mp3,hit.mp3,bird.json,bird.png,pole.json,pole.png,collectables.json,collectables.png", function() {
+  Q.compileSheets("door.png","door.json");
   Q.compileSheets("main.png","main.json");
  Q.compileSheets("enemies.png","enemies.json");
  Q.compileSheets("pole.png","pole.json");
