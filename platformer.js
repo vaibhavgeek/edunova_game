@@ -6,6 +6,12 @@ var Q = window.Q = Quintus()
         .setup("mygame",{ maximize: true })
         .controls(true).touch().enableSound()
 
+var final_score=0,
+    level_score=0,
+    temp_score=0,
+    level=0,
+    temp_level=0,
+    startx,starty,initial=1;
 Q.Sprite.extend("Player",{
 
   init: function(p) {
@@ -29,6 +35,9 @@ Q.Sprite.extend("Player",{
     this.on("hit.sprite",function(collision) {
 
                 if(collision.obj.isA("Door")) {
+                  initial=1;
+                  final_score=level_score+200;
+                  level_score=0;
             Q.stageScene("endGame",1, { label: "You Won!" }); 
             this.destroy();
             
@@ -45,6 +54,14 @@ Q.Sprite.extend("Player",{
       this.play("run_left");
     } else {
       this.play("stand");
+    }
+
+    if(this.p.vy > 1200) {
+      this.stage.unfollow();
+        Q.audio.play("hit(1).mp3");
+        Q.stageScene("endGame",2, { label: "You Died" }); 
+      this.destroy();  
+
     }
         },
 
@@ -70,7 +87,8 @@ Q.Sprite.extend("Enemy", {
     this.add("2d, aiBounce, animation");
     this.on("bump.left,bump.right,bump.bottom",function(collision) {
       if(collision.obj.isA("Player")) { 
-                 Q.stageScene("endGame",2, { label: "You Died" });   
+        Q.audio.play("hit(1).mp3");
+                  Q.stageScene("endGame",2, { label: "You Died" });   
                 collision.obj.destroy();
       }
     });
@@ -79,6 +97,10 @@ Q.Sprite.extend("Enemy", {
         Q.audio.play("hit.mp3");
         this.destroy(); 
         collision.obj.p.vy = -300; 
+        level_score+=100;
+         Q.stageScene("score",1, { 
+  label: "score: "+level_score
+});
  // alert("x="+collision.obj.p.x+"  y="+collision.obj.p.y);
       }
     });
@@ -133,11 +155,15 @@ Q.Sprite.extend("Pole",{
      this.add('2d,animation');
     this.on("bump.left,bump.right,bump.top",function(collision){ 
   if(collision.obj.isA("Player"))
-  {
+  { initial=0;
+    final_score+=level_score;
+     startx=collision.obj.p.x;
+  starty=collision.obj.p.y;
     this.play("open");
      if(cnt==0 || temp!=p.flag_no )
         { cnt++;
           temp=p.flag_no;
+          console.log("cnt="+cnt+"temp="+temp+"flag="+p.flag_no);
            Q.output(this.p);
         }    
    
@@ -166,8 +192,7 @@ $('#e').popover({ html : true,
         }
       });
  $('#e').css({'position':'absolute','top':yi,'right':xi}).popover('show');
-  if(cnt==0 || temp!=p.flag_no )
- { cnt++;temp=p.flag_no;}
+ 
  console.log("cnt="+cnt);
  $('#e').on('shown.bs.popover', function (e) { $('#b').show();
       Q.pauseGame();
@@ -212,12 +237,31 @@ Q.Sprite.extend("Coin",{
                this.add('2d,animation');
               this.on("bump.left,bump.right,bump.top",function(collision){ 
             if(collision.obj.isA("Player"))
-            {Q.audio.play('coin.mp3');
+            { level_score+=50;
+              Q.audio.play('coin.mp3');
                this.destroy(); 
+                Q.stageScene("score",1, { 
+  label: "score: "+level_score
+});
              }
           });
                  
          }
+});
+  Q.scene("score",function(stage) {
+  var label = stage.insert(new Q.UI.Text({
+    x: Q.width/4, 
+    y: 10,color:"#000099",
+    label: stage.options.label
+  }));
+   var b= stage.insert(new Q.UI.Button({x: Q.width/2,y:20 ,fill:'#CCCCCC',label:"Skip Level"}));
+ b.on("click",function(){
+Q.clearStages();
+//flag=flag+newscore;
+  //     disp=flag;
+    //   l++;comp=l;pflag=0;
+//Q.stageScene("quotes");
+ });
 });
 
 Q.scene('note',function(stage){
@@ -232,11 +276,18 @@ $('#exampleModal').on('hidden.bs.modal', function (e) {
  })
 });
 Q.scene("level",function(stage) {
-
+if(initial)
+{
+  cnt=0,startx=200,starty=500;
+}
 //stage.insert(new Q.Repeater({ asset: "back.png",repeatY:true, speedX: 10, speedY: 0.5 })); 
   Q.stageTMX("level.tmx",stage);
-  var player = stage.insert(new Q.Player({x:200,y:500}));
+  var player = stage.insert(new Q.Player({x:startx,y:starty}));
    stage.add("viewport").follow(player);
+
+   Q.stageScene("score",1, { 
+  label: "score: "+final_score
+}); 
 
 });
 
@@ -259,7 +310,7 @@ Q.scene('endGame',function(stage) {
         container.fit(20);
 });
 
-Q.loadTMX("level.tmx,main.json,main.png,enemies.png,enemies.json, coin.mp3,hit.mp3,bird.json,bird.png,pole.json,pole.png,collectables.json,collectables.png", function() {
+Q.loadTMX("level.tmx,main.json,main.png,enemies.png,enemies.json, coin.mp3,hit.mp3,hit(1).mp3,bird.json,bird.png,pole.json,pole.png,collectables.json,collectables.png", function() {
   Q.compileSheets("door.png","door.json");
   Q.compileSheets("main.png","main.json");
  Q.compileSheets("enemies.png","enemies.json");
