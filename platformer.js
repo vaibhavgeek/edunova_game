@@ -282,9 +282,10 @@ if(initial)
 }
 //stage.insert(new Q.Repeater({ asset: "back.png",repeatY:true, speedX: 10, speedY: 0.5 })); 
   Q.stageTMX("level.tmx",stage);
+
   var player = stage.insert(new Q.Player({x:startx,y:starty}));
    stage.add("viewport").follow(player);
-
+   Q.audio.play('intro.mp3',{ loop: true });
    Q.stageScene("score",1, { 
   label: "score: "+final_score
 }); 
@@ -293,6 +294,7 @@ if(initial)
 
 
 Q.scene('endGame',function(stage) {
+  Q.audio.stop();
       var container = stage.insert(new Q.UI.Container({
         x: Q.width/2, y: Q.height/2, fill: "rgba(0,0,0,0.5)"
       }));
@@ -310,7 +312,7 @@ Q.scene('endGame',function(stage) {
         container.fit(20);
 });
 
-Q.loadTMX("level.tmx,main.json,main.png,enemies.png,enemies.json, coin.mp3,hit.mp3,hit(1).mp3,bird.json,bird.png,pole.json,pole.png,collectables.json,collectables.png", function() {
+Q.loadTMX("level.tmx,main.json,main.png,enemies.png,enemies.json, coin.mp3,intro.mp3,hit.mp3,hit(1).mp3,bird.json,bird.png,pole.json,pole.png,collectables.json,collectables.png", function() {
   Q.compileSheets("door.png","door.json");
   Q.compileSheets("main.png","main.json");
  Q.compileSheets("enemies.png","enemies.json");
